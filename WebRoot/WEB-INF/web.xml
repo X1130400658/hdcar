@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>hdcarweb</display-name>
+  <welcome-file-list>
+    <welcome-file>dealerlogin.jsp</welcome-file>
+  </welcome-file-list>
+   <!-- 设置字符编码 -->
+    <filter>
+        <filter-name>CharacterFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+    <!-- 加载springmvc的配置 可监听服务器启动和关闭 启动Web容器时，自动装配ApplicationContext的配置信息。 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 指定加载的配置文件位置 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+        classpath*:beans.xml
+        <!-- classpath*:applicationContext-shiro.xml -->
+        </param-value>
+    </context-param>
+     <!-- log监听 -->
+    <context-param>  
+    	<param-name>webAppRootKey</param-name>  
+    	<param-value>webApp.root</param-value>  
+    </context-param>  
+    <context-param>  
+  		<param-name>log4jConfigLocation</param-name>  
+    	<param-value>classpath:log4j.properties</param-value>  
+    </context-param>  
+	<listener>    
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>    
+ 	</listener> 
+   
+    <!-- hibernate设置解决延迟加载问题  -->
+    <filter>
+        <filter-name>openSessionInViewerFilter</filter-name>
+        <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>openSessionInViewerFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <!-- 设置pagerfilter -->
+    <!-- 使用init-param元素为该Filter配置参数
+         param-name：指定参数名。
+         param-value：指定参数值。 -->
+    <filter>
+        <filter-name>pager</filter-name>
+        <filter-class>com.hdcarweb.filter.PagerFilter</filter-class>
+        <init-param>
+            <param-name>pageSize</param-name>
+            <param-value>10</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>pager</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+
+    <!-- 配置springMVC过滤请求 这里必须建hello-servlet.xml与之对应 -->
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+</web-app>

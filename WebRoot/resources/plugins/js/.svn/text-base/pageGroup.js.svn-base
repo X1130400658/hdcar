@@ -1,0 +1,82 @@
+ /* 分页功能 */
+   function genPageList(pageCount,pageSize){
+	   maxPageNum=Math.ceil(pageCount/pageSize);
+	   if(maxPageNum < 5)
+		   page_icon(1,maxPageNum, 1);
+	   else
+		   page_icon(1, 5, 1);
+	   document.getElementById("page").innerHTML=maxPageNum;
+   }
+   
+   function page_icon(start_page,end_page,eq){
+	    var ul_html = "";
+	    for(var i=start_page; i<=end_page; i++){
+	        ul_html += "<li>"+i+"</li>";
+	    }
+	    eq=eq-start_page;
+	    $("#pageGro ul").html(ul_html);
+	    $("#pageGro ul li").eq(eq).addClass("on");
+	}
+   
+  //点击分页按钮触发
+   $("#pagelist").on("click","li",function(){
+       /*if(pageCount > 5){
+           var pageNum = parseInt($(this).html());//获取当前页数
+           pageGroup(pageNum,pageCount);
+       }else{
+           var indexpage=jQuery(this).text();
+           $(this).addClass("on");
+           $(this).siblings("li").removeClass("on");
+       }*/
+       pageNum=this.innerHTML*1-1;
+       getlist(true);
+       var url=window.location.href;
+       window.location.href = url.slice(0,url.indexOf("#"))+"#"+pageNum;
+       $("#pageGro ul li").removeClass("on");
+       $(this).addClass("on");
+   });
+ 
+   //点击上一页触发
+   $("#pageGro .pageUp").click(function(){
+	   var pageList=$("#pageGro li");
+	   
+	   var startPage=pageList[0].innerHTML*1;
+	   var endPage=pageList[pageList.length-1].innerHTML*1;
+	   var url=window.location.href;
+       window.location.href = url.slice(0,url.indexOf("#"))+"#"+pageNum;
+       if(pageNum>0)
+       {
+    	   //当前页为起始页  按上一页改变页码
+    	   if(pageNum+1 == startPage)
+    	   {
+    		   startPage--;
+    		   endPage = pageList.length==5 ? endPage -1 : endPage;
+    	   }
+    	   pageNum -- ;
+    	   page_icon(startPage, endPage, pageNum+1);
+    	   getlist(true);
+       }
+   });
+
+   //点击下一页触发
+   $("#pageGro .pageDown").click(function(){
+	   var pageList=$("#pageGro li");
+	   var startPage=pageList[0].innerHTML*1;
+	   var endPage=pageList[pageList.length-1].innerHTML*1;
+	   var url=window.location.href;
+       window.location.href = url.slice(0,url.indexOf("#"))+"#"+pageNum;
+       
+       //当前页不是最大页数
+       if(pageNum+1 < maxPageNum)
+       {
+    	   //当前页为最后页  按上一页改变页码
+    	   if(pageNum+1 == endPage)
+    	   {
+    		   startPage++;
+    		   endPage++;
+    	   }
+    	   pageNum ++ ;
+    	   page_icon(startPage, endPage, pageNum+1);
+    	   getlist(true);
+       }
+   });
