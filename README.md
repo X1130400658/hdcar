@@ -1,9 +1,4 @@
-       /**
-     * SPAN_NAME_FLAG
+    /**
+     * 内部调用起点应用名
      */
-    public static final String SPAN_NAME_FLAG = "cache:span";
-    
-        /**
-     * 处理缓存span定时任务执行间隔
-     */
-    public static final int PROCESS_CACHE_SPAN_INTERVAL_MS = 1200000;
+    public static final String INNER = "Inner";
