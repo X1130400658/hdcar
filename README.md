@@ -1,42 +1,54 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
- */
-package com.huawei.sinan.topoprocessor.util;
+   /**
+     * CLIENT_SENT
+     */
+    public static final String CLIENT_SENT = "cs";
 
-import java.util.List;
+    /**
+     * CLIENT_RECEIVED
+     */
+    public static final String CLIENT_RECEIVED = "cr";
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.streams.processor.TimestampExtractor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+    /**
+     * SERVER_SENT
+     */
+    public static final String SERVER_SENT = "ss";
 
-import com.huawei.sinan.topoprocessor.processor.entity.SpanDto;
+    /**
+     * SERVER_RECEIVED
+     */
+    public static final String SERVER_RECEIVED = "sr";
 
-/**
- * 功能描述 span时间提取器
- *
- * @since 2021-03-19
- */
-@Component
-public class SpanTimestampExtractor implements TimestampExtractor {
+    /**
+     * SCHEMA_DATABASE
+     */
+    public static final String SCHEMA_DATABASE = "database";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpanTimestampExtractor.class);
+    /**
+     * SCHEMA_PROTOCOL
+     */
+    public static final String SCHEMA_PROTOCOL = "protocol";
 
-    @Override
-    public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {
-        try {
-            if (record.value() != null) {
-                List<SpanDto> list = (List<SpanDto>) record.value();
-                if (list.size() > 0) {
-                    return list.get(0).getTimestamp();
-                }
-                return record.timestamp();
-            }
-            return System.currentTimeMillis();
-        } catch (Exception e) {
-            LOGGER.error("Failed to extract time");
-        }
-        return 0L;
-    }
-}
+    /**
+     * SCHEMA_DATABASE_TYPE
+     */
+    public static final String SCHEMA_DATABASE_TYPE = "database_type";
+
+    /**
+     * SCHEMA_REQ_PARAMS
+     */
+    public static final String SCHEMA_REQ_PARAMS = "req_params";
+
+    /**
+     * SCHEMA_TOPIC
+     */
+    public static final String SCHEMA_TOPIC = "topic";
+
+    /**
+     * SCHEMA_KAFKA
+     */
+    public static final String SCHEMA_KAFKA = "KAFKA";
+
+    /**
+     * TRACINGTO_KEY
+     */
+    public static final String TRACINGTO_KEY = "tracingto-key";
