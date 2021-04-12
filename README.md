@@ -1,35 +1,42 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2020-2020. All rights reserved.
  */
-package com.huawei.sinan.topoprocessor.serde;
+package com.huawei.sinan.topoprocessor.util;
 
 import java.util.List;
-import java.util.Map;
 
-import org.apache.kafka.common.serialization.Serializer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.streams.processor.TimestampExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
 import com.huawei.sinan.topoprocessor.processor.entity.SpanDto;
 
 /**
- * 功能描述
+ * 功能描述 span时间提取器
  *
- * @since 2021-03-18
+ * @since 2021-03-19
  */
-public class SpanSerdeSerializer implements Serializer<List<SpanDto>> {
+@Component
+public class SpanTimestampExtractor implements TimestampExtractor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpanTimestampExtractor.class);
 
     @Override
-    public void configure(Map<String, ?> configs, boolean isKey) {
-
-    }
-
-    @Override
-    public byte[] serialize(String s, List<SpanDto> obj) {
-        return JSONObject.toJSONString(obj).getBytes();
-    }
-
-    @Override
-    public void close() {
-
+    public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {
+        try {
+            if (record.value() != null) {
+                List<SpanDto> list = (List<SpanDto>) record.value();
+                if (list.size() > 0) {
+                    return list.get(0).getTimestamp();
+                }
+                return record.timestamp();
+            }
+            return System.currentTimeMillis();
+        } catch (Exception e) {
+            LOGGER.error("Failed to extract time");
+        }
+        return 0L;
     }
 }
