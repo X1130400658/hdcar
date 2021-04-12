@@ -6,12 +6,9 @@ package com.huawei.sinan.topoprocessor.serde;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.kafka.common.serialization.Deserializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.apache.kafka.common.serialization.Serializer;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.huawei.sinan.topoprocessor.processor.entity.SpanDto;
 
 /**
@@ -19,9 +16,7 @@ import com.huawei.sinan.topoprocessor.processor.entity.SpanDto;
  *
  * @since 2021-03-18
  */
-@Component
-public class SpanSerdeDeserializer implements Deserializer<List<SpanDto>> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpanSerdeDeserializer.class);
+public class SpanSerdeSerializer implements Serializer<List<SpanDto>> {
 
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
@@ -29,19 +24,8 @@ public class SpanSerdeDeserializer implements Deserializer<List<SpanDto>> {
     }
 
     @Override
-    public List<SpanDto> deserialize(String s, byte[] bytes) {
-        if (null == bytes) {
-            return null;
-        } else {
-            try {
-                //LOGGER.info("List<SpanDto> is {}", new String(bytes));
-                List<SpanDto> obj = JSON.parseArray(new String(bytes), SpanDto.class);
-                return obj;
-            } catch (Exception e) {
-                LOGGER.error("fail to parse msg.{}", e.getMessage());
-                return null;
-            }
-        }
+    public byte[] serialize(String s, List<SpanDto> obj) {
+        return JSONObject.toJSONString(obj).getBytes();
     }
 
     @Override
